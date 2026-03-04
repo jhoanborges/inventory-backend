@@ -1,0 +1,5 @@
+sail exec api.senter vendor/bin/rector
+sail pint
+sail exec api.senter vendor/bin/phpstan analyse --memory-limit=2G
+
+
