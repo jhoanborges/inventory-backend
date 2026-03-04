@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\MovimientoController;
 use App\Http\Controllers\Api\ProductoController;
 use App\Http\Controllers\Api\RutaController;
 use App\Http\Controllers\Api\ScanController;
+use App\Http\Controllers\Api\UbicacionController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/auth/login', [AuthController::class, 'login']);
@@ -23,8 +24,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/rutas/{ruta}/iniciar', [RutaController::class, 'iniciar']);
     Route::post('/rutas/{ruta}/pausar', [RutaController::class, 'pausar']);
     Route::post('/rutas/{ruta}/finalizar', [RutaController::class, 'finalizar']);
-    Route::post('/rutas/{ruta}/ubicacion', [RutaController::class, 'registrarUbicacion']);
-    Route::get('/rutas/{ruta}/ubicaciones', [RutaController::class, 'ubicaciones']);
+
+    Route::post('/ubicacion', [UbicacionController::class, 'store']);
+    Route::get('/ubicaciones', [UbicacionController::class, 'index']);
 
     Route::get('/movimientos', [MovimientoController::class, 'index']);
     Route::post('/movimientos', [MovimientoController::class, 'store']);

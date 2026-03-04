@@ -165,37 +165,4 @@ class RutaController extends Controller
             'ruta' => new RutaResource($ruta->load('operador')),
         ]);
     }
-
-    public function registrarUbicacion(Request $request, Ruta $ruta): JsonResponse
-    {
-        if (! in_array($ruta->estado, [EstadoRuta::EnProgreso, EstadoRuta::Pausada])) {
-            return response()->json(['message' => 'Solo se puede registrar ubicación en rutas activas'], 422);
-        }
-
-        $validated = $request->validate([
-            'lat' => 'required|numeric|between:-90,90',
-            'lng' => 'required|numeric|between:-180,180',
-            'altitud' => 'nullable|numeric',
-            'precision' => 'nullable|numeric|min:0',
-            'velocidad' => 'nullable|numeric|min:0',
-            'rumbo' => 'nullable|numeric|between:0,360',
-            'registrado_at' => 'nullable|date',
-        ]);
-
-        $ubicacion = $ruta->ubicaciones()->create([
-            ...$validated,
-            'user_id' => auth()->id(),
-            'registrado_at' => $validated['registrado_at'] ?? now(),
-        ]);
-
-        return response()->json([
-            'message' => 'Ubicación registrada',
-            'ubicacion' => $ubicacion,
-        ], 201);
-    }
-
-    public function ubicaciones(Ruta $ruta): JsonResponse
-    {
-        return response()->json($ruta->ubicaciones);
-    }
 }

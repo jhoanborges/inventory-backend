@@ -144,7 +144,7 @@ class RutaResource extends Resource
                         ->label('Motivo de pausa')
                         ->placeholder('Sin pausa activa'),
                 ])
-                ->visible(fn (Ruta $record) => $record->estado->value === 'pausada'),
+                ->visible(fn (Ruta $record) => $record->estado === EstadoRuta::Pausada),
         ]);
     }
 

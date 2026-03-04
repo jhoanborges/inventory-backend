@@ -5,12 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class RutaUbicacion extends Model
+class Ubicacion extends Model
 {
-    protected $table = 'ruta_ubicaciones';
+    protected $table = 'ubicaciones';
 
     protected $fillable = [
-        'ruta_id',
         'user_id',
         'lat',
         'lng',
@@ -32,11 +31,6 @@ class RutaUbicacion extends Model
             'rumbo' => 'decimal:2',
             'registrado_at' => 'datetime',
         ];
-    }
-
-    public function ruta(): BelongsTo
-    {
-        return $this->belongsTo(Ruta::class);
     }
 
     public function user(): BelongsTo

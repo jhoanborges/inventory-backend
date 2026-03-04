@@ -48,4 +48,9 @@ class User extends Authenticatable implements FilamentUser
     {
         return $this->hasMany(MovimientoInventario::class);
     }
+
+    public function ubicaciones(): HasMany
+    {
+        return $this->hasMany(Ubicacion::class);
+    }
 }

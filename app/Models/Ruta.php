@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/** @property EstadoRuta $estado */
 class Ruta extends Model
 {
     use HasFactory;
@@ -58,10 +59,5 @@ class Ruta extends Model
     public function logs(): HasMany
     {
         return $this->hasMany(RutaLog::class)->orderByDesc('created_at');
-    }
-
-    public function ubicaciones(): HasMany
-    {
-        return $this->hasMany(RutaUbicacion::class)->orderByDesc('registrado_at');
     }
 }
