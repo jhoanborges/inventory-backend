@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\EstadoRuta;
 use App\Filament\Resources\RutaResource\Pages;
 use App\Filament\Resources\RutaResource\RelationManagers\LogsRelationManager;
 use App\Models\Ruta;
@@ -95,12 +96,11 @@ class RutaResource extends Resource
                     Infolists\Components\TextEntry::make('vehiculo')->label('Vehículo'),
                     Infolists\Components\TextEntry::make('estado')
                         ->badge()
-                        ->color(fn (string $state) => match ($state) {
-                            'pendiente' => 'warning',
-                            'en_progreso' => 'primary',
-                            'pausada' => 'danger',
-                            'completada' => 'success',
-                            default => 'gray',
+                        ->color(fn (EstadoRuta $state) => match ($state) {
+                            EstadoRuta::Pendiente => 'warning',
+                            EstadoRuta::EnProgreso => 'primary',
+                            EstadoRuta::Pausada => 'danger',
+                            EstadoRuta::Completada => 'success',
                         }),
                     Infolists\Components\TextEntry::make('fecha_inicio')
                         ->label('Inicio')
