@@ -8,6 +8,7 @@ use App\Models\Producto;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Validator;
 
 class ProductoController extends Controller
 {
@@ -76,6 +77,86 @@ class ProductoController extends Controller
         $producto->delete();
 
         return response()->json(['message' => 'Producto eliminado']);
+    }
+
+    public function importCsv(Request $request): JsonResponse
+    {
+        $request->validate([
+            'archivo' => 'required|file|mimes:csv,txt|max:10240',
+        ]);
+
+        $file = $request->file('archivo');
+        $handle = fopen($file->getRealPath(), 'r');
+        $header = fgetcsv($handle);
+
+        if (!$header) {
+            fclose($handle);
+            return response()->json(['message' => 'El archivo CSV está vacío'], 422);
+        }
+
+        $header = array_map(fn ($col) => strtolower(trim($col)), $header);
+
+        $requiredColumns = ['sku', 'nombre', 'unidad_medida'];
+        $missing = array_diff($requiredColumns, $header);
+
+        if (!empty($missing)) {
+            fclose($handle);
+            return response()->json([
+                'message' => 'Columnas requeridas faltantes: ' . implode(', ', $missing),
+            ], 422);
+        }
+
+        $allowedColumns = ['sku', 'nombre', 'descripcion', 'categoria', 'unidad_medida', 'precio', 'stock_actual', 'stock_minimo', 'barcode'];
+        $created = 0;
+        $updated = 0;
+        $errors = [];
+        $row = 1;
+
+        while (($line = fgetcsv($handle)) !== false) {
+            $row++;
+
+            if (count($line) !== count($header)) {
+                $errors[] = "Fila {$row}: número de columnas no coincide con el encabezado";
+                continue;
+            }
+
+            $data = array_combine($header, $line);
+            $data = array_intersect_key($data, array_flip($allowedColumns));
+            $data = array_map(fn ($v) => trim($v) === '' ? null : trim($v), $data);
+
+            $validator = Validator::make($data, [
+                'sku' => 'required|string',
+                'nombre' => 'required|string|max:255',
+                'unidad_medida' => 'required|string|max:50',
+                'descripcion' => 'nullable|string',
+                'categoria' => 'nullable|string|max:255',
+                'precio' => 'nullable|numeric|min:0',
+                'stock_actual' => 'nullable|integer|min:0',
+                'stock_minimo' => 'nullable|integer|min:0',
+                'barcode' => 'nullable|string',
+            ]);
+
+            if ($validator->fails()) {
+                $errors[] = "Fila {$row}: " . implode(', ', $validator->errors()->all());
+                continue;
+            }
+
+            $producto = Producto::updateOrCreate(
+                ['sku' => $data['sku']],
+                $data
+            );
+
+            $producto->wasRecentlyCreated ? $created++ : $updated++;
+        }
+
+        fclose($handle);
+
+        return response()->json([
+            'message' => "Importación completada: {$created} creados, {$updated} actualizados",
+            'created' => $created,
+            'updated' => $updated,
+            'errors' => $errors,
+        ]);
     }
 
     public function sync(Request $request): JsonResponse

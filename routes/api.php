@@ -16,6 +16,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('productos', ProductoController::class);
     Route::post('/productos/sync', [ProductoController::class, 'sync']);
+    Route::post('/productos/import-csv', [ProductoController::class, 'importCsv']);
 
     Route::apiResource('lotes', LoteController::class);
     Route::apiResource('rutas', RutaController::class);
