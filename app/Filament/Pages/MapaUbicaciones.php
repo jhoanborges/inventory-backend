@@ -15,9 +15,9 @@ class MapaUbicaciones extends Page implements HasForms
 {
     use InteractsWithForms;
 
-    protected static ?string $navigationIcon = 'heroicon-o-map';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-map';
 
-    protected static ?string $navigationGroup = 'Operaciones';
+    protected static string|\UnitEnum|null $navigationGroup = 'Operaciones';
 
     protected static ?string $navigationLabel = 'Mapa Ubicaciones';
 
