@@ -17,6 +17,7 @@ class Ubicacion extends Model
         'precision',
         'velocidad',
         'rumbo',
+        'dispositivo',
         'registrado_at',
     ];
 
@@ -29,6 +30,7 @@ class Ubicacion extends Model
             'precision' => 'decimal:2',
             'velocidad' => 'decimal:2',
             'rumbo' => 'decimal:2',
+            'dispositivo' => 'array',
             'registrado_at' => 'datetime',
         ];
     }

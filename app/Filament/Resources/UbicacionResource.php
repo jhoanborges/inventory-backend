@@ -57,6 +57,23 @@ class UbicacionResource extends Resource
                     ->label('Precisión')
                     ->suffix(' m')
                     ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('dispositivo.modelo')
+                    ->label('Dispositivo')
+                    ->placeholder('—')
+                    ->toggleable(),
+                TextColumn::make('dispositivo.os')
+                    ->label('SO')
+                    ->placeholder('—')
+                    ->toggleable(),
+                TextColumn::make('dispositivo.bateria')
+                    ->label('Batería')
+                    ->suffix('%')
+                    ->placeholder('—')
+                    ->toggleable(),
+                TextColumn::make('dispositivo.version_app')
+                    ->label('Versión App')
+                    ->placeholder('—')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('registrado_at')
                     ->label('Registrado')
                     ->dateTime('d/m/Y H:i:s')

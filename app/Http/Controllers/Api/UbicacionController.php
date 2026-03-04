@@ -18,6 +18,11 @@ class UbicacionController extends Controller
             'precision' => 'nullable|numeric|min:0',
             'velocidad' => 'nullable|numeric|min:0',
             'rumbo' => 'nullable|numeric|between:0,360',
+            'dispositivo' => 'nullable|array',
+            'dispositivo.bateria' => 'nullable|numeric|between:0,100',
+            'dispositivo.modelo' => 'nullable|string|max:255',
+            'dispositivo.os' => 'nullable|string|max:255',
+            'dispositivo.version_app' => 'nullable|string|max:50',
             'registrado_at' => 'nullable|date',
         ]);
 
