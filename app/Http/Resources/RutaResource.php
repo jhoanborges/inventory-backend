@@ -17,6 +17,7 @@ class RutaResource extends JsonResource
             'operador_id' => $this->operador_id,
             'vehiculo' => $this->vehiculo,
             'estado' => $this->estado,
+            'motivo_pausa' => $this->motivo_pausa,
             'fecha_inicio' => $this->fecha_inicio,
             'fecha_fin' => $this->fecha_fin,
             'operador' => $this->whenLoaded('operador', fn () => [

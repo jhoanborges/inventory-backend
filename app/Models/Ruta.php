@@ -19,6 +19,7 @@ class Ruta extends Model
         'operador_id',
         'vehiculo',
         'estado',
+        'motivo_pausa',
         'fecha_inicio',
         'fecha_fin',
     ];
