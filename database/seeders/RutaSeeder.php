@@ -12,18 +12,20 @@ class RutaSeeder extends Seeder
     {
         $operadores = User::role('operador')->get();
 
-        // Rutas pendientes
         Ruta::factory(3)
             ->recycle($operadores)
             ->create();
 
-        // Rutas en progreso
         Ruta::factory(2)
             ->enProgreso()
             ->recycle($operadores)
             ->create();
 
-        // Rutas completadas
+        Ruta::factory(2)
+            ->pausada()
+            ->recycle($operadores)
+            ->create();
+
         Ruta::factory(4)
             ->completada()
             ->recycle($operadores)

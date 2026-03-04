@@ -20,6 +20,14 @@ class Ruta extends Model
         'vehiculo',
         'estado',
         'motivo_pausa',
+        'origen_direccion',
+        'origen_place_id',
+        'origen_lat',
+        'origen_lng',
+        'destino_direccion',
+        'destino_place_id',
+        'destino_lat',
+        'destino_lng',
         'fecha_inicio',
         'fecha_fin',
     ];
@@ -28,6 +36,10 @@ class Ruta extends Model
     {
         return [
             'estado' => EstadoRuta::class,
+            'origen_lat' => 'decimal:7',
+            'origen_lng' => 'decimal:7',
+            'destino_lat' => 'decimal:7',
+            'destino_lng' => 'decimal:7',
             'fecha_inicio' => 'datetime',
             'fecha_fin' => 'datetime',
         ];
