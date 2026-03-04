@@ -2,56 +2,60 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\MovimientoInventarioResource\Pages;
+use App\Filament\Resources\MovimientoInventarioResource\Pages\CreateMovimientoInventario;
+use App\Filament\Resources\MovimientoInventarioResource\Pages\ListMovimientoInventarios;
 use App\Models\MovimientoInventario;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\ViewAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\BadgeColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class MovimientoInventarioResource extends Resource
 {
     protected static ?string $model = MovimientoInventario::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-arrows-right-left';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-arrows-right-left';
 
-    protected static ?string $navigationGroup = 'Inventario';
+    protected static string|\UnitEnum|null $navigationGroup = 'Inventario';
 
     protected static ?string $navigationLabel = 'Movimientos';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form->schema([
-            Forms\Components\Select::make('producto_id')
+        return $schema->components([
+            Select::make('producto_id')
                 ->relationship('producto', 'nombre')
                 ->searchable()
                 ->preload()
                 ->required(),
-            Forms\Components\Select::make('lote_id')
+            Select::make('lote_id')
                 ->relationship('lote', 'numero_lote')
                 ->searchable()
                 ->preload(),
-            Forms\Components\Select::make('ruta_id')
+            Select::make('ruta_id')
                 ->relationship('ruta', 'nombre')
                 ->searchable()
                 ->preload(),
-            Forms\Components\Select::make('user_id')
+            Select::make('user_id')
                 ->relationship('user', 'name')
                 ->searchable()
                 ->preload()
                 ->required(),
-            Forms\Components\Select::make('tipo')
+            Select::make('tipo')
                 ->options([
                     'entrada' => 'Entrada',
                     'salida' => 'Salida',
                 ])
                 ->required(),
-            Forms\Components\TextInput::make('cantidad')
+            TextInput::make('cantidad')
                 ->numeric()
                 ->required()
                 ->minValue(1),
-            Forms\Components\TextInput::make('motivo')
+            TextInput::make('motivo')
                 ->maxLength(255),
         ]);
     }
@@ -60,30 +64,30 @@ class MovimientoInventarioResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('producto.nombre')->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('lote.numero_lote'),
-                Tables\Columns\TextColumn::make('user.name')->label('Usuario'),
-                Tables\Columns\BadgeColumn::make('tipo')
+                TextColumn::make('producto.nombre')->searchable()->sortable(),
+                TextColumn::make('lote.numero_lote'),
+                TextColumn::make('user.name')->label('Usuario'),
+                BadgeColumn::make('tipo')
                     ->colors([
                         'success' => 'entrada',
                         'danger' => 'salida',
                     ]),
-                Tables\Columns\TextColumn::make('cantidad')->sortable(),
-                Tables\Columns\TextColumn::make('motivo'),
-                Tables\Columns\TextColumn::make('created_at')->dateTime()->sortable(),
+                TextColumn::make('cantidad')->sortable(),
+                TextColumn::make('motivo'),
+                TextColumn::make('created_at')->dateTime()->sortable(),
             ])
             ->filters([])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
+            ->recordActions([
+                ViewAction::make(),
             ])
-            ->bulkActions([]);
+            ->toolbarActions([]);
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListMovimientoInventarios::route('/'),
-            'create' => Pages\CreateMovimientoInventario::route('/create'),
+            'index' => ListMovimientoInventarios::route('/'),
+            'create' => CreateMovimientoInventario::route('/create'),
         ];
     }
 }

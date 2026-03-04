@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\RutaResource\Pages;
 
 use App\Filament\Resources\RutaResource;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditRuta extends EditRecord
@@ -13,7 +13,7 @@ class EditRuta extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 }

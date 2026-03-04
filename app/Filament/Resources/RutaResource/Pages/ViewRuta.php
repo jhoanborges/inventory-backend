@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\RutaResource\Pages;
 
 use App\Filament\Resources\RutaResource;
-use Filament\Actions;
+use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 
 class ViewRuta extends ViewRecord
@@ -13,7 +13,7 @@ class ViewRuta extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\EditAction::make(),
+            EditAction::make(),
         ];
     }
 }

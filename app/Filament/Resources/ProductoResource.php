@@ -2,37 +2,49 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\ProductoResource\Pages;
+use App\Filament\Resources\ProductoResource\Pages\CreateProducto;
+use App\Filament\Resources\ProductoResource\Pages\EditProducto;
+use App\Filament\Resources\ProductoResource\Pages\ListProductos;
 use App\Models\Producto;
-use Filament\Forms;
-use Filament\Forms\Form;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 
 class ProductoResource extends Resource
 {
     protected static ?string $model = Producto::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-cube';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-cube';
 
-    protected static ?string $navigationGroup = 'Inventario';
+    protected static string|\UnitEnum|null $navigationGroup = 'Inventario';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form->schema([
-            Forms\Components\TextInput::make('sku')
+        return $schema->components([
+            TextInput::make('sku')
                 ->required()
                 ->unique(ignoreRecord: true)
                 ->maxLength(255),
-            Forms\Components\TextInput::make('nombre')
+            TextInput::make('nombre')
                 ->required()
                 ->maxLength(255),
-            Forms\Components\Textarea::make('descripcion')
+            Textarea::make('descripcion')
                 ->columnSpanFull(),
-            Forms\Components\TextInput::make('categoria')
+            TextInput::make('categoria')
                 ->maxLength(255),
-            Forms\Components\Select::make('unidad_medida')
+            Select::make('unidad_medida')
                 ->options([
                     'kg' => 'Kilogramo',
                     'unidad' => 'Unidad',
@@ -41,22 +53,22 @@ class ProductoResource extends Resource
                     'metro' => 'Metro',
                 ])
                 ->required(),
-            Forms\Components\TextInput::make('precio')
+            TextInput::make('precio')
                 ->numeric()
                 ->prefix('$'),
-            Forms\Components\TextInput::make('stock_actual')
+            TextInput::make('stock_actual')
                 ->numeric()
                 ->default(0),
-            Forms\Components\TextInput::make('stock_minimo')
+            TextInput::make('stock_minimo')
                 ->numeric()
                 ->default(0),
-            Forms\Components\TextInput::make('barcode')
+            TextInput::make('barcode')
                 ->unique(ignoreRecord: true)
                 ->maxLength(255),
-            Forms\Components\FileUpload::make('imagen')
+            FileUpload::make('imagen')
                 ->image()
                 ->directory('productos'),
-            Forms\Components\Toggle::make('activo')
+            Toggle::make('activo')
                 ->default(true),
         ]);
     }
@@ -65,26 +77,26 @@ class ProductoResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('sku')->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('nombre')->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('categoria')->sortable(),
-                Tables\Columns\TextColumn::make('unidad_medida'),
-                Tables\Columns\TextColumn::make('precio')->money('USD')->sortable(),
-                Tables\Columns\TextColumn::make('stock_actual')->sortable(),
-                Tables\Columns\TextColumn::make('stock_minimo'),
-                Tables\Columns\IconColumn::make('activo')->boolean(),
-                Tables\Columns\TextColumn::make('created_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('sku')->searchable()->sortable(),
+                TextColumn::make('nombre')->searchable()->sortable(),
+                TextColumn::make('categoria')->sortable(),
+                TextColumn::make('unidad_medida'),
+                TextColumn::make('precio')->money('USD')->sortable(),
+                TextColumn::make('stock_actual')->sortable(),
+                TextColumn::make('stock_minimo'),
+                IconColumn::make('activo')->boolean(),
+                TextColumn::make('created_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\TernaryFilter::make('activo'),
+                TernaryFilter::make('activo'),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -97,9 +109,9 @@ class ProductoResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListProductos::route('/'),
-            'create' => Pages\CreateProducto::route('/create'),
-            'edit' => Pages\EditProducto::route('/{record}/edit'),
+            'index' => ListProductos::route('/'),
+            'create' => CreateProducto::route('/create'),
+            'edit' => EditProducto::route('/{record}/edit'),
         ];
     }
 }

@@ -1,6 +1,6 @@
-sail exec api.senter vendor/bin/rector
+sail exec inventory.test vendor/bin/rector
 sail pint
-sail exec api.senter vendor/bin/phpstan analyse --memory-limit=2G
+sail exec inventory.test vendor/bin/phpstan analyse --memory-limit=2G
 
 
 zrok share public 80

@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\ProductoResource\Pages;
 
 use App\Filament\Resources\ProductoResource;
-use Filament\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListProductos extends ListRecords
@@ -13,7 +13,7 @@ class ListProductos extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

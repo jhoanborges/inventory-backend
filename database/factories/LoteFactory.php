@@ -25,7 +25,7 @@ class LoteFactory extends Factory
 
         return [
             'producto_id' => Producto::factory(),
-            'numero_lote' => 'LOT-' . str_pad(self::$loteCounter, 6, '0', STR_PAD_LEFT),
+            'numero_lote' => 'LOT-'.str_pad(self::$loteCounter, 6, '0', STR_PAD_LEFT),
             'cantidad' => fake()->numberBetween(10, 500),
             'fecha_fabricacion' => $fechaFabricacion,
             'fecha_vencimiento' => $fechaVencimiento,

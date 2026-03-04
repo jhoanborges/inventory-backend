@@ -3,7 +3,8 @@
 namespace App\Filament\Resources\RutaResource\RelationManagers;
 
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables;
+use Filament\Tables\Columns\BadgeColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class LogsRelationManager extends RelationManager
@@ -16,13 +17,13 @@ class LogsRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->label('Fecha')
                     ->dateTime('d/m/Y H:i:s')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('user.name')
+                TextColumn::make('user.name')
                     ->label('Usuario'),
-                Tables\Columns\BadgeColumn::make('estado_anterior')
+                BadgeColumn::make('estado_anterior')
                     ->label('Estado Anterior')
                     ->colors([
                         'warning' => 'pendiente',
@@ -30,7 +31,7 @@ class LogsRelationManager extends RelationManager
                         'danger' => 'pausada',
                         'success' => 'completada',
                     ]),
-                Tables\Columns\BadgeColumn::make('estado_nuevo')
+                BadgeColumn::make('estado_nuevo')
                     ->label('Estado Nuevo')
                     ->colors([
                         'warning' => 'pendiente',
@@ -38,7 +39,7 @@ class LogsRelationManager extends RelationManager
                         'danger' => 'pausada',
                         'success' => 'completada',
                     ]),
-                Tables\Columns\TextColumn::make('motivo')
+                TextColumn::make('motivo')
                     ->label('Motivo')
                     ->placeholder('—')
                     ->wrap(),

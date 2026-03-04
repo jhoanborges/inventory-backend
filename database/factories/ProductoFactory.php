@@ -22,7 +22,7 @@ class ProductoFactory extends Factory
         $unidades = ['unidad', 'kg', 'litro', 'caja', 'paquete', 'metro'];
 
         return [
-            'sku' => 'SKU-' . str_pad(self::$skuCounter, 5, '0', STR_PAD_LEFT),
+            'sku' => 'SKU-'.str_pad(self::$skuCounter, 5, '0', STR_PAD_LEFT),
             'nombre' => fake()->words(rand(2, 4), true),
             'descripcion' => fake()->sentence(),
             'categoria' => fake()->randomElement($categorias),

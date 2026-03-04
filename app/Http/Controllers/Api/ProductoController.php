@@ -89,8 +89,9 @@ class ProductoController extends Controller
         $handle = fopen($file->getRealPath(), 'r');
         $header = fgetcsv($handle);
 
-        if (!$header) {
+        if (! $header) {
             fclose($handle);
+
             return response()->json(['message' => 'El archivo CSV está vacío'], 422);
         }
 
@@ -99,10 +100,11 @@ class ProductoController extends Controller
         $requiredColumns = ['sku', 'nombre', 'unidad_medida'];
         $missing = array_diff($requiredColumns, $header);
 
-        if (!empty($missing)) {
+        if ($missing !== []) {
             fclose($handle);
+
             return response()->json([
-                'message' => 'Columnas requeridas faltantes: ' . implode(', ', $missing),
+                'message' => 'Columnas requeridas faltantes: '.implode(', ', $missing),
             ], 422);
         }
 
@@ -117,6 +119,7 @@ class ProductoController extends Controller
 
             if (count($line) !== count($header)) {
                 $errors[] = "Fila {$row}: número de columnas no coincide con el encabezado";
+
                 continue;
             }
 
@@ -137,7 +140,8 @@ class ProductoController extends Controller
             ]);
 
             if ($validator->fails()) {
-                $errors[] = "Fila {$row}: " . implode(', ', $validator->errors()->all());
+                $errors[] = "Fila {$row}: ".implode(', ', $validator->errors()->all());
+
                 continue;
             }
 

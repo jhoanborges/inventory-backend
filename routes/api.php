@@ -23,6 +23,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/rutas/{ruta}/iniciar', [RutaController::class, 'iniciar']);
     Route::post('/rutas/{ruta}/pausar', [RutaController::class, 'pausar']);
     Route::post('/rutas/{ruta}/finalizar', [RutaController::class, 'finalizar']);
+    Route::post('/rutas/{ruta}/ubicacion', [RutaController::class, 'registrarUbicacion']);
+    Route::get('/rutas/{ruta}/ubicaciones', [RutaController::class, 'ubicaciones']);
 
     Route::get('/movimientos', [MovimientoController::class, 'index']);
     Route::post('/movimientos', [MovimientoController::class, 'store']);

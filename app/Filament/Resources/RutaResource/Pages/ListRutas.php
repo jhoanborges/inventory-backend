@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\RutaResource\Pages;
 
 use App\Filament\Resources\RutaResource;
-use Filament\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListRutas extends ListRecords
@@ -13,7 +13,7 @@ class ListRutas extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 }

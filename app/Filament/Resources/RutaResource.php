@@ -3,44 +3,55 @@
 namespace App\Filament\Resources;
 
 use App\Enums\EstadoRuta;
-use App\Filament\Resources\RutaResource\Pages;
+use App\Filament\Resources\RutaResource\Pages\CreateRuta;
+use App\Filament\Resources\RutaResource\Pages\EditRuta;
+use App\Filament\Resources\RutaResource\Pages\ListRutas;
+use App\Filament\Resources\RutaResource\Pages\ViewRuta;
 use App\Filament\Resources\RutaResource\RelationManagers\LogsRelationManager;
 use App\Models\Ruta;
-use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Infolists;
-use Filament\Infolists\Infolist;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\BadgeColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class RutaResource extends Resource
 {
     protected static ?string $model = Ruta::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-truck';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-truck';
 
-    protected static ?string $navigationGroup = 'Logística';
+    protected static string|\UnitEnum|null $navigationGroup = 'Logística';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form->schema([
-            Forms\Components\TextInput::make('nombre')
+        return $schema->components([
+            TextInput::make('nombre')
                 ->required()
                 ->maxLength(255),
-            Forms\Components\TextInput::make('origen')
+            TextInput::make('origen')
                 ->required()
                 ->maxLength(255),
-            Forms\Components\TextInput::make('destino')
+            TextInput::make('destino')
                 ->required()
                 ->maxLength(255),
-            Forms\Components\Select::make('operador_id')
+            Select::make('operador_id')
                 ->relationship('operador', 'name')
                 ->searchable()
                 ->preload(),
-            Forms\Components\TextInput::make('vehiculo')
+            TextInput::make('vehiculo')
                 ->maxLength(255),
-            Forms\Components\Select::make('estado')
+            Select::make('estado')
                 ->options([
                     'pendiente' => 'Pendiente',
                     'en_progreso' => 'En Progreso',
@@ -48,8 +59,8 @@ class RutaResource extends Resource
                 ])
                 ->default('pendiente')
                 ->required(),
-            Forms\Components\DateTimePicker::make('fecha_inicio'),
-            Forms\Components\DateTimePicker::make('fecha_fin'),
+            DateTimePicker::make('fecha_inicio'),
+            DateTimePicker::make('fecha_fin'),
         ]);
     }
 
@@ -57,44 +68,44 @@ class RutaResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('nombre')->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('origen')->sortable(),
-                Tables\Columns\TextColumn::make('destino')->sortable(),
-                Tables\Columns\TextColumn::make('operador.name')->sortable(),
-                Tables\Columns\TextColumn::make('vehiculo'),
-                Tables\Columns\BadgeColumn::make('estado')
+                TextColumn::make('nombre')->searchable()->sortable(),
+                TextColumn::make('origen')->sortable(),
+                TextColumn::make('destino')->sortable(),
+                TextColumn::make('operador.name')->sortable(),
+                TextColumn::make('vehiculo'),
+                BadgeColumn::make('estado')
                     ->colors([
                         'warning' => 'pendiente',
                         'primary' => 'en_progreso',
                         'danger' => 'pausada',
                         'success' => 'completada',
                     ]),
-                Tables\Columns\TextColumn::make('fecha_inicio')->dateTime()->sortable(),
-                Tables\Columns\TextColumn::make('created_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('fecha_inicio')->dateTime()->sortable(),
+                TextColumn::make('created_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
 
-    public static function infolist(Infolist $infolist): Infolist
+    public static function infolist(Schema $schema): Schema
     {
-        return $infolist->schema([
-            Infolists\Components\Section::make('Información General')
+        return $schema->components([
+            Section::make('Información General')
                 ->columns(3)
                 ->schema([
-                    Infolists\Components\TextEntry::make('nombre'),
-                    Infolists\Components\TextEntry::make('operador.name')->label('Operador'),
-                    Infolists\Components\TextEntry::make('vehiculo')->label('Vehículo'),
-                    Infolists\Components\TextEntry::make('estado')
+                    TextEntry::make('nombre'),
+                    TextEntry::make('operador.name')->label('Operador'),
+                    TextEntry::make('vehiculo')->label('Vehículo'),
+                    TextEntry::make('estado')
                         ->badge()
                         ->color(fn (EstadoRuta $state) => match ($state) {
                             EstadoRuta::Pendiente => 'warning',
@@ -102,34 +113,34 @@ class RutaResource extends Resource
                             EstadoRuta::Pausada => 'danger',
                             EstadoRuta::Completada => 'success',
                         }),
-                    Infolists\Components\TextEntry::make('fecha_inicio')
+                    TextEntry::make('fecha_inicio')
                         ->label('Inicio')
                         ->dateTime('d/m/Y H:i')
                         ->placeholder('—'),
-                    Infolists\Components\TextEntry::make('fecha_fin')
+                    TextEntry::make('fecha_fin')
                         ->label('Fin')
                         ->dateTime('d/m/Y H:i')
                         ->placeholder('—'),
                 ]),
-            Infolists\Components\Section::make('Origen')
+            Section::make('Origen')
                 ->columns(2)
                 ->schema([
-                    Infolists\Components\TextEntry::make('origen')->label('Nombre'),
-                    Infolists\Components\TextEntry::make('origen_direccion')->label('Dirección'),
-                    Infolists\Components\TextEntry::make('origen_lat')->label('Latitud'),
-                    Infolists\Components\TextEntry::make('origen_lng')->label('Longitud'),
+                    TextEntry::make('origen')->label('Nombre'),
+                    TextEntry::make('origen_direccion')->label('Dirección'),
+                    TextEntry::make('origen_lat')->label('Latitud'),
+                    TextEntry::make('origen_lng')->label('Longitud'),
                 ]),
-            Infolists\Components\Section::make('Destino')
+            Section::make('Destino')
                 ->columns(2)
                 ->schema([
-                    Infolists\Components\TextEntry::make('destino')->label('Nombre'),
-                    Infolists\Components\TextEntry::make('destino_direccion')->label('Dirección'),
-                    Infolists\Components\TextEntry::make('destino_lat')->label('Latitud'),
-                    Infolists\Components\TextEntry::make('destino_lng')->label('Longitud'),
+                    TextEntry::make('destino')->label('Nombre'),
+                    TextEntry::make('destino_direccion')->label('Dirección'),
+                    TextEntry::make('destino_lat')->label('Latitud'),
+                    TextEntry::make('destino_lng')->label('Longitud'),
                 ]),
-            Infolists\Components\Section::make('Pausa')
+            Section::make('Pausa')
                 ->schema([
-                    Infolists\Components\TextEntry::make('motivo_pausa')
+                    TextEntry::make('motivo_pausa')
                         ->label('Motivo de pausa')
                         ->placeholder('Sin pausa activa'),
                 ])
@@ -147,10 +158,10 @@ class RutaResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListRutas::route('/'),
-            'create' => Pages\CreateRuta::route('/create'),
-            'view' => Pages\ViewRuta::route('/{record}'),
-            'edit' => Pages\EditRuta::route('/{record}/edit'),
+            'index' => ListRutas::route('/'),
+            'create' => CreateRuta::route('/create'),
+            'view' => ViewRuta::route('/{record}'),
+            'edit' => EditRuta::route('/{record}/edit'),
         ];
     }
 }

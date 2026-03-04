@@ -59,4 +59,9 @@ class Ruta extends Model
     {
         return $this->hasMany(RutaLog::class)->orderByDesc('created_at');
     }
+
+    public function ubicaciones(): HasMany
+    {
+        return $this->hasMany(RutaUbicacion::class)->orderByDesc('registrado_at');
+    }
 }
