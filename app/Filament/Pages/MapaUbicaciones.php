@@ -8,8 +8,8 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Form;
 use Filament\Pages\Page;
+use Filament\Schemas\Schema;
 
 class MapaUbicaciones extends Page implements HasForms
 {
@@ -37,7 +37,7 @@ class MapaUbicaciones extends Page implements HasForms
         $this->hasta = now()->toDateString();
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $form): Schema
     {
         return $form
             ->schema([
