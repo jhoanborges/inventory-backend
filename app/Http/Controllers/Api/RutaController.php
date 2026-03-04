@@ -86,11 +86,13 @@ class RutaController extends Controller
         return response()->json(['message' => 'Ruta eliminada']);
     }
 
-    public function iniciar(Ruta $ruta): JsonResponse
+    public function iniciar(Request $request, Ruta $ruta): JsonResponse
     {
         if (! in_array($ruta->estado, [EstadoRuta::Pendiente, EstadoRuta::Pausada])) {
             return response()->json(['message' => 'Solo se puede iniciar una ruta pendiente o pausada'], 422);
         }
+
+        $request->validate($this->logValidationRules());
 
         $estadoAnterior = $ruta->estado;
 
@@ -104,6 +106,7 @@ class RutaController extends Controller
             'user_id' => auth()->id(),
             'estado_anterior' => $estadoAnterior,
             'estado_nuevo' => EstadoRuta::EnProgreso,
+            ...$this->logExtraData($request),
         ]);
 
         return response()->json([
@@ -120,6 +123,7 @@ class RutaController extends Controller
 
         $request->validate([
             'motivo_pausa' => 'nullable|string|max:1000',
+            ...$this->logValidationRules(),
         ]);
 
         $ruta->update([
@@ -132,6 +136,7 @@ class RutaController extends Controller
             'estado_anterior' => EstadoRuta::EnProgreso,
             'estado_nuevo' => EstadoRuta::Pausada,
             'motivo' => $request->motivo_pausa,
+            ...$this->logExtraData($request),
         ]);
 
         return response()->json([
@@ -140,11 +145,13 @@ class RutaController extends Controller
         ]);
     }
 
-    public function finalizar(Ruta $ruta): JsonResponse
+    public function finalizar(Request $request, Ruta $ruta): JsonResponse
     {
         if (! in_array($ruta->estado, [EstadoRuta::EnProgreso, EstadoRuta::Pausada])) {
             return response()->json(['message' => 'Solo se puede finalizar una ruta en progreso o pausada'], 422);
         }
+
+        $request->validate($this->logValidationRules());
 
         $estadoAnterior = $ruta->estado;
 
@@ -158,11 +165,36 @@ class RutaController extends Controller
             'user_id' => auth()->id(),
             'estado_anterior' => $estadoAnterior,
             'estado_nuevo' => EstadoRuta::Completada,
+            ...$this->logExtraData($request),
         ]);
 
         return response()->json([
             'message' => 'Ruta finalizada',
             'ruta' => new RutaResource($ruta->load('operador')),
         ]);
+    }
+
+    /** @return array<string, string> */
+    private function logValidationRules(): array
+    {
+        return [
+            'lat' => 'nullable|numeric|between:-90,90',
+            'lng' => 'nullable|numeric|between:-180,180',
+            'dispositivo' => 'nullable|array',
+            'dispositivo.bateria' => 'nullable|numeric|between:0,100',
+            'dispositivo.modelo' => 'nullable|string|max:255',
+            'dispositivo.os' => 'nullable|string|max:255',
+            'dispositivo.version_app' => 'nullable|string|max:50',
+        ];
+    }
+
+    /** @return array<string, mixed> */
+    private function logExtraData(Request $request): array
+    {
+        return [
+            'lat' => $request->lat,
+            'lng' => $request->lng,
+            'dispositivo' => $request->dispositivo,
+        ];
     }
 }

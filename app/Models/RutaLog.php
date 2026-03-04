@@ -14,6 +14,9 @@ class RutaLog extends Model
         'estado_anterior',
         'estado_nuevo',
         'motivo',
+        'lat',
+        'lng',
+        'dispositivo',
     ];
 
     protected function casts(): array
@@ -21,6 +24,9 @@ class RutaLog extends Model
         return [
             'estado_anterior' => EstadoRuta::class,
             'estado_nuevo' => EstadoRuta::class,
+            'lat' => 'decimal:7',
+            'lng' => 'decimal:7',
+            'dispositivo' => 'array',
         ];
     }
 

@@ -15,6 +15,9 @@ return new class extends Migration
             $table->string('estado_anterior')->nullable();
             $table->string('estado_nuevo');
             $table->text('motivo')->nullable();
+            $table->decimal('lat', 10, 7)->nullable();
+            $table->decimal('lng', 10, 7)->nullable();
+            $table->json('dispositivo')->nullable();
             $table->timestamps();
         });
     }
