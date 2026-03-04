@@ -10,7 +10,10 @@ class ScanController extends Controller
 {
     public function scan(string $barcode): ProductoResource
     {
-        $producto = Producto::where('barcode', $barcode)->with('lotes')->firstOrFail();
+        $producto = Producto::where('barcode', $barcode)
+            ->orWhere('sku', $barcode)
+            ->with('lotes')
+            ->firstOrFail();
 
         return new ProductoResource($producto);
     }
