@@ -21,11 +21,9 @@ class MapaUbicaciones extends Page implements HasForms
 
     protected static ?string $navigationLabel = 'Mapa Ubicaciones';
 
-    protected static ?string $title = 'Mapa de Ubicaciones';
-
     protected static ?string $slug = 'mapa-ubicaciones';
 
-    protected static string $view = 'filament.pages.mapa-ubicaciones';
+    protected string $view = 'filament.pages.mapa-ubicaciones';
 
     public ?int $user_id = null;
 
