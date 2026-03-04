@@ -54,4 +54,9 @@ class Ruta extends Model
     {
         return $this->hasMany(MovimientoInventario::class);
     }
+
+    public function logs(): HasMany
+    {
+        return $this->hasMany(RutaLog::class)->orderByDesc('created_at');
+    }
 }

@@ -3,9 +3,12 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\RutaResource\Pages;
+use App\Filament\Resources\RutaResource\RelationManagers\LogsRelationManager;
 use App\Models\Ruta;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Infolists;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -62,6 +65,7 @@ class RutaResource extends Resource
                     ->colors([
                         'warning' => 'pendiente',
                         'primary' => 'en_progreso',
+                        'danger' => 'pausada',
                         'success' => 'completada',
                     ]),
                 Tables\Columns\TextColumn::make('fecha_inicio')->dateTime()->sortable(),
@@ -69,6 +73,7 @@ class RutaResource extends Resource
             ])
             ->filters([])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
@@ -79,11 +84,72 @@ class RutaResource extends Resource
             ]);
     }
 
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist->schema([
+            Infolists\Components\Section::make('Información General')
+                ->columns(3)
+                ->schema([
+                    Infolists\Components\TextEntry::make('nombre'),
+                    Infolists\Components\TextEntry::make('operador.name')->label('Operador'),
+                    Infolists\Components\TextEntry::make('vehiculo')->label('Vehículo'),
+                    Infolists\Components\TextEntry::make('estado')
+                        ->badge()
+                        ->color(fn (string $state) => match ($state) {
+                            'pendiente' => 'warning',
+                            'en_progreso' => 'primary',
+                            'pausada' => 'danger',
+                            'completada' => 'success',
+                            default => 'gray',
+                        }),
+                    Infolists\Components\TextEntry::make('fecha_inicio')
+                        ->label('Inicio')
+                        ->dateTime('d/m/Y H:i')
+                        ->placeholder('—'),
+                    Infolists\Components\TextEntry::make('fecha_fin')
+                        ->label('Fin')
+                        ->dateTime('d/m/Y H:i')
+                        ->placeholder('—'),
+                ]),
+            Infolists\Components\Section::make('Origen')
+                ->columns(2)
+                ->schema([
+                    Infolists\Components\TextEntry::make('origen')->label('Nombre'),
+                    Infolists\Components\TextEntry::make('origen_direccion')->label('Dirección'),
+                    Infolists\Components\TextEntry::make('origen_lat')->label('Latitud'),
+                    Infolists\Components\TextEntry::make('origen_lng')->label('Longitud'),
+                ]),
+            Infolists\Components\Section::make('Destino')
+                ->columns(2)
+                ->schema([
+                    Infolists\Components\TextEntry::make('destino')->label('Nombre'),
+                    Infolists\Components\TextEntry::make('destino_direccion')->label('Dirección'),
+                    Infolists\Components\TextEntry::make('destino_lat')->label('Latitud'),
+                    Infolists\Components\TextEntry::make('destino_lng')->label('Longitud'),
+                ]),
+            Infolists\Components\Section::make('Pausa')
+                ->schema([
+                    Infolists\Components\TextEntry::make('motivo_pausa')
+                        ->label('Motivo de pausa')
+                        ->placeholder('Sin pausa activa'),
+                ])
+                ->visible(fn (Ruta $record) => $record->estado->value === 'pausada'),
+        ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            LogsRelationManager::class,
+        ];
+    }
+
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListRutas::route('/'),
             'create' => Pages\CreateRuta::route('/create'),
+            'view' => Pages\ViewRuta::route('/{record}'),
             'edit' => Pages\EditRuta::route('/{record}/edit'),
         ];
     }

@@ -92,10 +92,18 @@ class RutaController extends Controller
             return response()->json(['message' => 'Solo se puede iniciar una ruta pendiente o pausada'], 422);
         }
 
+        $estadoAnterior = $ruta->estado;
+
         $ruta->update([
             'estado' => EstadoRuta::EnProgreso,
             'motivo_pausa' => null,
             'fecha_inicio' => $ruta->fecha_inicio ?? now(),
+        ]);
+
+        $ruta->logs()->create([
+            'user_id' => auth()->id(),
+            'estado_anterior' => $estadoAnterior,
+            'estado_nuevo' => EstadoRuta::EnProgreso,
         ]);
 
         return response()->json([
@@ -119,6 +127,13 @@ class RutaController extends Controller
             'motivo_pausa' => $request->motivo_pausa,
         ]);
 
+        $ruta->logs()->create([
+            'user_id' => auth()->id(),
+            'estado_anterior' => EstadoRuta::EnProgreso,
+            'estado_nuevo' => EstadoRuta::Pausada,
+            'motivo' => $request->motivo_pausa,
+        ]);
+
         return response()->json([
             'message' => 'Ruta pausada',
             'ruta' => new RutaResource($ruta->load('operador')),
@@ -131,10 +146,18 @@ class RutaController extends Controller
             return response()->json(['message' => 'Solo se puede finalizar una ruta en progreso o pausada'], 422);
         }
 
+        $estadoAnterior = $ruta->estado;
+
         $ruta->update([
             'estado' => EstadoRuta::Completada,
             'motivo_pausa' => null,
             'fecha_fin' => now(),
+        ]);
+
+        $ruta->logs()->create([
+            'user_id' => auth()->id(),
+            'estado_anterior' => $estadoAnterior,
+            'estado_nuevo' => EstadoRuta::Completada,
         ]);
 
         return response()->json([
