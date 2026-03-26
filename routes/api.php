@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\LoteController;
 use App\Http\Controllers\Api\MovimientoController;
 use App\Http\Controllers\Api\ProductoController;
 use App\Http\Controllers\Api\RutaController;
+use App\Http\Controllers\Api\OperacionController;
 use App\Http\Controllers\Api\ScanController;
 use App\Http\Controllers\Api\UbicacionController;
 use Illuminate\Support\Facades\Route;
@@ -33,4 +34,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/scan/verify-stock', [ScanController::class, 'verifyStock']);
     Route::get('/scan/{barcode}', [ScanController::class, 'scan']);
+
+    Route::get('/operaciones', [OperacionController::class, 'index']);
+    Route::post('/operaciones', [OperacionController::class, 'store']);
+    Route::get('/operaciones/{operacion}', [OperacionController::class, 'show']);
 });

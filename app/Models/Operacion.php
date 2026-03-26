@@ -2,41 +2,36 @@
 
 namespace App\Models;
 
+use App\Enums\EstadoOperacion;
 use App\Enums\TipoMovimiento;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class MovimientoInventario extends Model
+class Operacion extends Model
 {
-    use HasFactory;
+    protected $table = 'operaciones';
 
     protected $fillable = [
-        'producto_id',
-        'lote_id',
+        'numero_operacion',
         'ruta_id',
-        'operacion_id',
         'user_id',
         'tipo',
-        'cantidad',
-        'motivo',
+        'estado',
+        'observaciones',
     ];
 
     protected function casts(): array
     {
         return [
             'tipo' => TipoMovimiento::class,
+            'estado' => EstadoOperacion::class,
         ];
     }
 
-    public function producto(): BelongsTo
+    public function items(): HasMany
     {
-        return $this->belongsTo(Producto::class);
-    }
-
-    public function lote(): BelongsTo
-    {
-        return $this->belongsTo(Lote::class);
+        return $this->hasMany(OperacionItem::class);
     }
 
     public function ruta(): BelongsTo
@@ -47,5 +42,10 @@ class MovimientoInventario extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function movimientos(): HasMany
+    {
+        return $this->hasMany(MovimientoInventario::class);
     }
 }
