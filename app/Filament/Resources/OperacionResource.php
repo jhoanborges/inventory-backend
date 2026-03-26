@@ -36,14 +36,13 @@ class OperacionResource extends Resource
             TextEntry::make('numero_operacion')->label('N° Operación'),
             TextEntry::make('tipo')
                 ->badge()
-                ->color(fn (string $state) => $state === 'entrada' ? 'success' : 'danger'),
+                ->color(fn (TipoMovimiento $state) => $state === TipoMovimiento::Entrada ? 'success' : 'danger'),
             TextEntry::make('estado')
                 ->badge()
-                ->color(fn (string $state) => match ($state) {
-                    'completada' => 'success',
-                    'pendiente' => 'warning',
-                    'cancelada' => 'danger',
-                    default => 'gray',
+                ->color(fn (EstadoOperacion $state) => match ($state) {
+                    EstadoOperacion::Completada => 'success',
+                    EstadoOperacion::Pendiente => 'warning',
+                    EstadoOperacion::Cancelada => 'danger',
                 }),
             TextEntry::make('user.name')->label('Usuario'),
             TextEntry::make('ruta.nombre')->label('Ruta')->default('Sin ruta'),
