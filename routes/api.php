@@ -3,9 +3,9 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\LoteController;
 use App\Http\Controllers\Api\MovimientoController;
+use App\Http\Controllers\Api\OperacionController;
 use App\Http\Controllers\Api\ProductoController;
 use App\Http\Controllers\Api\RutaController;
-use App\Http\Controllers\Api\OperacionController;
 use App\Http\Controllers\Api\ScanController;
 use App\Http\Controllers\Api\UbicacionController;
 use Illuminate\Support\Facades\Route;

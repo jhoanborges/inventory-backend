@@ -47,7 +47,7 @@ class OperacionController extends Controller
         ]);
 
         $result = DB::transaction(function () use ($validated, $request) {
-            $numero = 'OP-' . str_pad((string) (Operacion::count() + 1), 6, '0', STR_PAD_LEFT);
+            $numero = 'OP-'.str_pad((string) (Operacion::count() + 1), 6, '0', STR_PAD_LEFT);
 
             $operacion = Operacion::create([
                 'numero_operacion' => $numero,

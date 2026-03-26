@@ -50,7 +50,7 @@ class ScanController extends Controller
                 'barcode' => $item['barcode'],
                 'quantity' => $item['quantity'],
                 'available' => $producto !== null && $producto->stock_actual >= $item['quantity'],
-                'stock_actual' => $producto?->stock_actual ?? 0,
+                'stock_actual' => $producto->stock_actual ?? 0,
                 'producto' => $producto?->nombre,
             ];
         });

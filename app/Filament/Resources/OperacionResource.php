@@ -75,7 +75,6 @@ class OperacionResource extends Resource
                         EstadoOperacion::Completada => 'success',
                         EstadoOperacion::Pendiente => 'warning',
                         EstadoOperacion::Cancelada => 'danger',
-                        default => 'gray',
                     })
                     ->sortable(),
                 TextColumn::make('user.name')->label('Usuario')->sortable(),
