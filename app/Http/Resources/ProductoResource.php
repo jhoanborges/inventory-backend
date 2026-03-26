@@ -24,7 +24,12 @@ class ProductoResource extends JsonResource
             'barcode_image' => $this->barcode_image
                 ? Storage::disk('r2')->url($this->barcode_image)
                 : null,
-            'imagen' => $this->imagen,
+            'imagen' => $this->imagen
+                ? Storage::disk('r2')->url($this->imagen)
+                : null,
+            'imagenes' => $this->imagenes
+                ? collect($this->imagenes)->map(fn (string $path) => Storage::disk('r2')->url($path))->values()
+                : [],
             'activo' => $this->activo,
             'lotes' => LoteResource::collection($this->whenLoaded('lotes')),
             'created_at' => $this->created_at,

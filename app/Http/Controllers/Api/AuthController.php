@@ -9,10 +9,19 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+    /**
+     * Login
+     *
+     * Authenticate a user and return an API token.
+     *
+     * @unauthenticated
+     */
     public function login(Request $request): JsonResponse
     {
         $request->validate([
+            /** @example admin@bodega.com */
             'email' => 'required|email',
+            /** @example password */
             'password' => 'required',
         ]);
 
