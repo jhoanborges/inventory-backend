@@ -31,5 +31,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/movimientos', [MovimientoController::class, 'index']);
     Route::post('/movimientos', [MovimientoController::class, 'store']);
 
+    Route::post('/scan/verify-stock', [ScanController::class, 'verifyStock']);
     Route::get('/scan/{barcode}', [ScanController::class, 'scan']);
 });
