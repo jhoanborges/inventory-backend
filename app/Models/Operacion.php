@@ -19,6 +19,7 @@ class Operacion extends Model
         'tipo',
         'estado',
         'observaciones',
+        'firma_url',
     ];
 
     protected function casts(): array

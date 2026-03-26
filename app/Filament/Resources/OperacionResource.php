@@ -7,6 +7,7 @@ use App\Enums\TipoMovimiento;
 use App\Filament\Resources\OperacionResource\Pages\ListOperaciones;
 use App\Models\Operacion;
 use Filament\Actions\ViewAction;
+use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
@@ -48,6 +49,10 @@ class OperacionResource extends Resource
             TextEntry::make('ruta.nombre')->label('Ruta')->default('Sin ruta'),
             TextEntry::make('observaciones')->columnSpanFull(),
             TextEntry::make('created_at')->label('Fecha')->dateTime(),
+            ImageEntry::make('firma_url')
+                ->label('Firma')
+                ->columnSpanFull()
+                ->height(150),
             RepeatableEntry::make('items')
                 ->label('Productos')
                 ->columnSpanFull()

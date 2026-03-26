@@ -9,6 +9,8 @@ use App\Models\Producto;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class OperacionController extends Controller
 {
@@ -44,9 +46,21 @@ class OperacionController extends Controller
             'items' => 'required|array|min:1',
             'items.*.barcode' => 'required|string',
             'items.*.quantity' => 'required|integer|min:1',
+            'firma' => 'required|string',
         ]);
 
-        $result = DB::transaction(function () use ($validated, $request) {
+        $firmaBase64 = preg_replace('#^data:image/\w+;base64,#', '', $validated['firma']);
+        $firmaData = base64_decode($firmaBase64, true);
+
+        if ($firmaData === false) {
+            return response()->json(['message' => 'Firma inválida'], 422);
+        }
+
+        $firmaPath = 'firmas/'.Str::uuid().'.png';
+        Storage::disk('r2')->put($firmaPath, $firmaData);
+        $firmaUrl = Storage::disk('r2')->url($firmaPath);
+
+        $result = DB::transaction(function () use ($validated, $request, $firmaUrl) {
             $numero = 'OP-'.str_pad((string) (Operacion::count() + 1), 6, '0', STR_PAD_LEFT);
 
             $operacion = Operacion::create([
@@ -56,6 +70,7 @@ class OperacionController extends Controller
                 'tipo' => $validated['tipo'],
                 'estado' => 'completada',
                 'observaciones' => $validated['observaciones'] ?? null,
+                'firma_url' => $firmaUrl,
             ]);
 
             $movimientos = [];
