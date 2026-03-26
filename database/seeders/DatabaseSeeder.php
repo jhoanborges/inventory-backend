@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             LoteSeeder::class,
             RutaSeeder::class,
             MovimientoInventarioSeeder::class,
+            UbicacionSeeder::class,
         ]);
     }
 }
