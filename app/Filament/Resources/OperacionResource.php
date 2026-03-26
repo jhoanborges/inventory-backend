@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\EstadoOperacion;
+use App\Enums\TipoMovimiento;
 use App\Filament\Resources\OperacionResource\Pages\ListOperaciones;
 use App\Models\Operacion;
 use Filament\Actions\ViewAction;
@@ -65,14 +67,14 @@ class OperacionResource extends Resource
                 TextColumn::make('numero_operacion')->label('N° Operación')->searchable()->sortable(),
                 TextColumn::make('tipo')
                     ->badge()
-                    ->color(fn (string $state) => $state === 'entrada' ? 'success' : 'danger')
+                    ->color(fn (TipoMovimiento $state) => $state === TipoMovimiento::Entrada ? 'success' : 'danger')
                     ->sortable(),
                 TextColumn::make('estado')
                     ->badge()
-                    ->color(fn (string $state) => match ($state) {
-                        'completada' => 'success',
-                        'pendiente' => 'warning',
-                        'cancelada' => 'danger',
+                    ->color(fn (EstadoOperacion $state) => match ($state) {
+                        EstadoOperacion::Completada => 'success',
+                        EstadoOperacion::Pendiente => 'warning',
+                        EstadoOperacion::Cancelada => 'danger',
                         default => 'gray',
                     })
                     ->sortable(),
