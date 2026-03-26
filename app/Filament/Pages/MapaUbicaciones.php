@@ -91,7 +91,10 @@ class MapaUbicaciones extends Page implements HasForms
         $routes = [];
 
         foreach ($grouped as $userId => $points) {
-            $user = $points->first()->user;
+            /** @var Ubicacion $firstPoint */
+            $firstPoint = $points->first();
+            /** @var User $user */
+            $user = $firstPoint->user;
             $color = $colors[$colorIndex % count($colors)];
             $colorIndex++;
 
@@ -99,10 +102,10 @@ class MapaUbicaciones extends Page implements HasForms
                 'user_id' => $userId,
                 'user_name' => $user->name,
                 'color' => $color,
-                'points' => $points->map(fn ($p) => [
+                'points' => $points->map(fn (Ubicacion $p): array => [
                     'lat' => (float) $p->lat,
                     'lng' => (float) $p->lng,
-                    'timestamp' => $p->registrado_at->format('d/m/Y H:i:s'),
+                    'timestamp' => \Carbon\Carbon::parse($p->registrado_at)->format('d/m/Y H:i:s'),
                     'velocidad' => $p->velocidad,
                 ])->values()->toArray(),
             ];

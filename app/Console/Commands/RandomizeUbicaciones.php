@@ -23,6 +23,7 @@ class RandomizeUbicaciones extends Command
 
         if ($count === 0) {
             $this->warn('No ubicaciones found.');
+
             return self::SUCCESS;
         }
 

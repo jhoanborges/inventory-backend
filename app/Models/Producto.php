@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Observers\ProductoObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+#[ObservedBy(ProductoObserver::class)]
 class Producto extends Model
 {
     use HasFactory;
@@ -20,7 +23,9 @@ class Producto extends Model
         'stock_actual',
         'stock_minimo',
         'barcode',
+        'barcode_image',
         'imagen',
+        'imagenes',
         'activo',
     ];
 
@@ -29,6 +34,7 @@ class Producto extends Model
         return [
             'activo' => 'boolean',
             'precio' => 'decimal:2',
+            'imagenes' => 'array',
         ];
     }
 

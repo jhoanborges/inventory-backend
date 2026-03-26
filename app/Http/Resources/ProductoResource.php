@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class ProductoResource extends JsonResource
 {
@@ -20,6 +21,9 @@ class ProductoResource extends JsonResource
             'stock_actual' => $this->stock_actual,
             'stock_minimo' => $this->stock_minimo,
             'barcode' => $this->barcode,
+            'barcode_image' => $this->barcode_image
+                ? Storage::disk('r2')->url($this->barcode_image)
+                : null,
             'imagen' => $this->imagen,
             'activo' => $this->activo,
             'lotes' => LoteResource::collection($this->whenLoaded('lotes')),
